@@ -23,8 +23,8 @@ def _get_files_and_folders(
     )[0]
     cells: list[bs4.element.Tag] = list(
         filter(
-            lambda td: "row-name-cell" in str(td),  # type: ignore
-            folders_and_files.find_all("td"),  # type: ignore
+            lambda td: "row-name-cell" in str(td),
+            folders_and_files.find_all("td"),
         )
     )
     folders = []

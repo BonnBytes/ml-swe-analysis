@@ -2,7 +2,7 @@
 
 # import urllib
 # from bs4 import BeautifulSoup
-import urllib
+import urllib.parse
 
 from paper_crawler.crawl_jmlr import _parse_links, mloss_link
 from paper_crawler.filter_and_download_links import process_repo_link

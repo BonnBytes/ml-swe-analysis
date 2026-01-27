@@ -119,9 +119,9 @@ def get_nips_pdf(year: int) -> list[str]:
     url_str = f"https://papers.nips.cc/paper_files/paper/{year}"
     soup = BeautifulSoup(urllib.request.urlopen(url_str), "html.parser")
     paper_list = soup.find_all("ul", {"class": "paper-list"})[0]
-    paper_links = paper_list.find_all("a")  # type: ignore
+    paper_links = paper_list.find_all("a")
     process_link = lambda link: str(link).split()[1][6:-1]  # noqa E731
-    paper_links = list(map(process_link, paper_links))
+    paper_links = list(map(process_link, paper_links))  # type: ignore
     pdf_links = []
     # get the pdf
     for paper_link in tqdm(paper_links, total=len(paper_links), desc=url_str):
@@ -142,12 +142,12 @@ def get_nips_pdf(year: int) -> list[str]:
     return pdf_links
 
 
-def get_nips_2025_pdf(stop=0):
+def get_nips_2025_pdf(stop: int = 0) -> list[str]:
     """Get neurips 2025 paper links."""
     url_str = "https://neurips.cc/Downloads/2025"
     soup = BeautifulSoup(urllib.request.urlopen(url_str), "html.parser")
     paper_list = soup.find_all("div", {"class": "list_html"})[0]
-    paper_page_links = paper_list.find_all("a")  # type: ignore
+    paper_page_links = paper_list.find_all("a")
     # get the pdf
     pdf_links = []
     for paper_tag in tqdm(paper_page_links, total=len(paper_page_links), desc=url_str):
@@ -166,7 +166,7 @@ def get_nips_2025_pdf(stop=0):
                 .replace("forum", "pdf")
                 .strip()
             )
-            pdf_links.append(extract_link(pdf_soup))
+            pdf_links.append(extract_link(pdf_soup))  # type: ignore
         except Exception as e:
             tqdm.write(f"{paper_link}, throws {e}")
         if stop > 0:

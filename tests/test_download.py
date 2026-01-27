@@ -1,6 +1,6 @@
 """Test the download code frome the 'filter_and_download_links' module."""
 
-import urllib
+import urllib.parse
 
 from paper_crawler.filter_and_download_links import process_repo_link
 
