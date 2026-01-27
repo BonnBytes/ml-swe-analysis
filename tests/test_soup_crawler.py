@@ -7,6 +7,7 @@ from paper_crawler.crawl_links_soup import (
     get_iclr_2016_pdf,
     get_icml_2023_pdf,
     get_icml_2024_pdf,
+    get_nips_2025_pdf,
     get_nips_pdf,
     process_link,
 )
@@ -65,3 +66,9 @@ def test_iclr_pdf_2016() -> None:
     """Check if the soup crawler works for ICLR 2016."""
     pdf_list = get_iclr_2016_pdf()
     assert len(pdf_list) == 65 + 15  # 65 poster papers, 15 orals
+
+
+def test_get_nips_2025_pdf() -> None:
+    """Check if the soup crawler works for NIPS 2025."""
+    pdf_list = get_nips_2025_pdf(10)
+    assert len(pdf_list) > 0

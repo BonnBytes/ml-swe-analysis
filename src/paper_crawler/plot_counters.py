@@ -4,9 +4,9 @@ import pickle
 from collections import Counter
 from typing import Any, Union
 
+import matplot2tikz as tikz
 import matplotlib.pyplot as plt
 import numpy as np
-import tikzplotlib as tikz
 
 # tikzplotlib backwards compatability
 # we need to load an old version of matplotlib.
@@ -96,7 +96,7 @@ def _post_process_dict(
 
 
 def re_structure(
-    pids: list[str], counter_dict: dict[str, dict[str, Any]], python_only: bool = False
+    pids: list[str], counter_dict: dict[str, dict[str, Any]]
 ) -> dict[str, Any]:
     """Restructure counter dictionaries remove the top layer.
 
@@ -104,7 +104,6 @@ def re_structure(
         pids (list[str]): A list of plot-conference IDs to process.
         counter_dict (dict): A dictionary containing counters
             for different software features.
-        python_only (bool): remove all repos that dont use Python.
     """
     # restructure data
     software_keys: list[tuple[str, bool]] = []
@@ -155,9 +154,6 @@ def re_structure(
         data_dict_by_conf[conf_key] = _post_process_dict(data_dict_by_conf[conf_key])
         data_dict_by_conf[conf_key]["page_total"] = counter_dict[conf_key]["page_total"]  # type: ignore
 
-    if python_only:
-        pass
-
     return data_dict_by_conf
 
 
@@ -197,7 +193,7 @@ def plot_data(data_dict_by_conf: dict[str, Any], plot_prefix: str) -> None:
             plt.legend()
             # plt.ylim(0, 105)
             plt.grid()
-            plt.ylabel("adoption [\%]")  # noqa: W605
+            plt.ylabel("adoption %")  # noqa: W605
             plt.xlabel("conference year")
 
             if filename:
@@ -260,8 +256,8 @@ def plot_data(data_dict_by_conf: dict[str, Any], plot_prefix: str) -> None:
 
 if __name__ == "__main__":
     # PLOT ICML stats.
-    file_ids = [f"icml20{year}" for year in range(17, 25)] + ["ICML.cc_2025_Conference"]
-    pids = [f"{year}" for year in range(17, 26)]
+    file_ids = [f"icml20{year}" for year in range(18, 25)] + ["ICML.cc_2025_Conference"]
+    pids = [f"{year}" for year in range(18, 26)]
     icml_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -269,11 +265,11 @@ if __name__ == "__main__":
             id_counters = pickle.load(f)
             icml_counter_dict[pid] = id_counters
 
-    structured_icml_dict = re_structure(pids, icml_counter_dict, python_only=True)
+    structured_icml_dict = re_structure(pids, icml_counter_dict)
 
     # PLOT aistats stats.
-    file_ids = [f"aistats20{year}" for year in range(17, 26)]
-    pids = [f"{year}" for year in range(17, 26)]
+    file_ids = [f"aistats20{year}" for year in range(18, 26)]
+    pids = [f"{year}" for year in range(18, 26)]
     aistats_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -281,11 +277,11 @@ if __name__ == "__main__":
             id_counters = pickle.load(f)
             aistats_counter_dict[pid] = id_counters
 
-    structured_aistats_dict = re_structure(pids, aistats_counter_dict, python_only=True)
+    structured_aistats_dict = re_structure(pids, aistats_counter_dict)
 
     # PLOT Neurips stats
-    file_ids = [f"nips20{year}" for year in range(17, 25)]
-    pids = [f"{year}" for year in range(17, 25)]
+    file_ids = [f"nips20{year}" for year in range(18, 26)]
+    pids = [f"{year}" for year in range(18, 26)]
     neurips_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -293,7 +289,7 @@ if __name__ == "__main__":
             id_counters = pickle.load(f)
             neurips_counter_dict[pid] = id_counters
 
-    structured_neurips_dict = re_structure(pids, neurips_counter_dict, python_only=True)
+    structured_neurips_dict = re_structure(pids, neurips_counter_dict)
 
     # PLOT ICLR
     file_ids = (
@@ -303,7 +299,7 @@ if __name__ == "__main__":
         + ["iclr2019"]
         + [f"ICLR.cc_20{year}_Conference" for year in range(20, 26)]
     )
-    pids = [f"{year}" for year in range(17, 26)] + ["25"]
+    pids = [f"{year}" for year in range(18, 26)] + ["25"]
     iclr_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -311,7 +307,7 @@ if __name__ == "__main__":
             id_counters = pickle.load(f)
             iclr_counter_dict[pid] = id_counters
 
-    structured_iclr_dict = re_structure(pids, iclr_counter_dict, python_only=True)
+    structured_iclr_dict = re_structure(pids, iclr_counter_dict)
 
     # PLOT TMLR
     def _bar_plots(conf: str) -> dict[str, float]:
@@ -352,7 +348,7 @@ if __name__ == "__main__":
             "packaged": packaged_counter / file_total,
             "tests": counter_dict[("test-folder", True)] / file_total,
             "docs": counter_dict[("docs", True)] / file_total,
-            "python": counter_dict["uses_python", True] / file_total,
+            # "python": counter_dict["uses_python", True] / file_total,
             "LICENSE": counter_dict["LICENSE", True] / file_total,
         }
 
@@ -366,7 +362,7 @@ if __name__ == "__main__":
     xticks = [
         "README",
         "LICENSE",
-        "python",
+        # "python",
         "dependencies",
         "packaged",
         "tests",
@@ -388,7 +384,7 @@ if __name__ == "__main__":
         multiplier += 1
     ax.set_xticks(x + width, xticks)
     ax.set_ylim(0, 100)
-    ax.set_ylabel("Adoption [\%]")  # noqa: W605
+    ax.set_ylabel("Adoption \%")  # noqa: W605
     ax.set_title("Estimated adoption")
     ax.grid()
     ax.legend(loc="upper right", ncol=2)

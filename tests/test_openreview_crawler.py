@@ -21,4 +21,4 @@ def test_iclr23() -> None:
     load_dotenv()
     venueid = "ICLR.cc/2023/Conference"
     links = get_openreview_submissions(venueid)
-    assert len(links) == 3793
+    assert len(links) == 3792

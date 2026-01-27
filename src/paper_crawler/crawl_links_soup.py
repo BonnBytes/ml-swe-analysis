@@ -142,6 +142,38 @@ def get_nips_pdf(year: int) -> list[str]:
     return pdf_links
 
 
+def get_nips_2025_pdf(stop=0):
+    url_str = "https://neurips.cc/Downloads/2025"
+    soup = BeautifulSoup(urllib.request.urlopen(url_str), "html.parser")
+    paper_list = soup.find_all("div", {"class": "list_html"})[0]
+    paper_page_links = paper_list.find_all("a")  # type: ignore
+    # get the pdf
+    pdf_links = []
+    for paper_tag in tqdm(paper_page_links, total=len(paper_page_links), desc=url_str):
+        try:
+            paper_link = str(paper_tag).split(">")[0].split("=")[-1][1:-1]
+            full_url = "https://nips.cc" + paper_link
+            sub_soup = BeautifulSoup(urllib.request.urlopen(full_url), "html.parser")
+            pdf_soup = list(
+                filter(lambda line: "openreview" in str(line), sub_soup.find_all("a"))
+            )[0]
+            extract_link = (
+                lambda link: str(link)
+                .split("title")[0]
+                .split("href=")[-1]
+                .replace('"', "")
+                .replace("forum", "pdf")
+                .strip()
+            )
+            pdf_links.append(extract_link(pdf_soup))
+        except Exception as e:
+            tqdm.write(f"{paper_link}, throws {e}")
+        if stop > 0:
+            if len(pdf_links) > stop:
+                return pdf_links
+    return pdf_links
+
+
 def get_iclr_2016_pdf() -> list[str]:
     """Fetch the list of PDF URLs for accepted papers at ICLR 2016.
 
@@ -207,6 +239,8 @@ if __name__ == "__main__":
             pdf_soup = get_icml_2023_pdf()
         elif args.id == "icml2022":
             pdf_soup = get_icml_pdf(2022)
+        elif "nips2025" in args.id:
+            pdf_soup = get_nips_2025_pdf()
         elif "icml" in args.id:
             pdf_soup = get_icml_pdf(int(args.id[4:]))
         elif "nips" in args.id:
@@ -219,6 +253,7 @@ if __name__ == "__main__":
             pdf_soup = get_iclr_pdf_2019()
         elif "iclr2016" in args.id:
             pdf_soup = get_iclr_2016_pdf()
+
         else:
             raise ValueError("Unkown conference.")
 
