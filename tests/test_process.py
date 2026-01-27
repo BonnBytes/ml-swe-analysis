@@ -165,7 +165,7 @@ def test_nested_test_folder_src() -> None:
     loaded_test_in_src = process_repo_link(test_in_src_url)
     stats_in_src = extract_stats(loaded_test_in_src)
     assert stats_in_src["folders"]["test"] is False
-    assert stats_in_src["folders"]["test"] is False
+    assert stats_in_src["folders"]["tests"] is False
     assert stats_in_src["folders"]["src/test"] is True
 
 

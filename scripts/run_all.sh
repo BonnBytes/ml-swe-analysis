@@ -29,7 +29,7 @@ for aistatsconf in aistats2025 aistats2024 aistats2023 aistats2022 aistats2021 a
 done
 
 # python -m src.paper_crawler.crawl_links_openreview --id NeurIPS.cc/2024/Conference
-for nipsconf in nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
+for nipsconf in nips2025 nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
     echo crawling papers from: $nipsconf
     python -m src.paper_crawler.crawl_links_soup --id "$nipsconf"
 done
@@ -67,7 +67,7 @@ for aistatsconf in aistats2025 aistats2024 aistats2023 aistats2022 aistats2021 a
 done
 
 # python -m src.paper_crawler.filter_and_download_links --id nips2024
-for nipsconf in nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
+for nipsconf in nips2025 nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
     echo looking at links for: $nipsconf
     python -m src.paper_crawler.filter_and_download_links --id "$nipsconf"
 done
@@ -101,7 +101,7 @@ for aistatsconf in aistats2025 aistats2024 aistats2023 aistats2022 aistats2021 a
 done
 
 # python -m src.paper_crawler.process_pages --id nips2024
-for nipsconf in nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
+for nipsconf in nips2025 nips2024 nips2023 nips2022 nips2021 nips2020 nips2019 nips2018 nips2017 nips2016 nips2015 nips2014; do
     echo processing pages for: $nipsconf
     python -m src.paper_crawler.process_pages --id "$nipsconf"
 done

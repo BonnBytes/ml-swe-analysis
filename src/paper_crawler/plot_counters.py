@@ -4,9 +4,9 @@ import pickle
 from collections import Counter
 from typing import Any, Union
 
+import matplot2tikz as tikz
 import matplotlib.pyplot as plt
 import numpy as np
-import tikzplotlib as tikz
 
 # tikzplotlib backwards compatability
 # we need to load an old version of matplotlib.
@@ -260,8 +260,8 @@ def plot_data(data_dict_by_conf: dict[str, Any], plot_prefix: str) -> None:
 
 if __name__ == "__main__":
     # PLOT ICML stats.
-    file_ids = [f"icml20{year}" for year in range(17, 25)] + ["ICML.cc_2025_Conference"]
-    pids = [f"{year}" for year in range(17, 26)]
+    file_ids = [f"icml20{year}" for year in range(18, 25)] + ["ICML.cc_2025_Conference"]
+    pids = [f"{year}" for year in range(18, 26)]
     icml_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -272,8 +272,8 @@ if __name__ == "__main__":
     structured_icml_dict = re_structure(pids, icml_counter_dict, python_only=True)
 
     # PLOT aistats stats.
-    file_ids = [f"aistats20{year}" for year in range(17, 26)]
-    pids = [f"{year}" for year in range(17, 26)]
+    file_ids = [f"aistats20{year}" for year in range(18, 26)]
+    pids = [f"{year}" for year in range(18, 26)]
     aistats_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -284,8 +284,8 @@ if __name__ == "__main__":
     structured_aistats_dict = re_structure(pids, aistats_counter_dict, python_only=True)
 
     # PLOT Neurips stats
-    file_ids = [f"nips20{year}" for year in range(17, 25)]
-    pids = [f"{year}" for year in range(17, 25)]
+    file_ids = [f"nips20{year}" for year in range(18, 26)]
+    pids = [f"{year}" for year in range(18, 26)]
     neurips_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -303,7 +303,7 @@ if __name__ == "__main__":
         + ["iclr2019"]
         + [f"ICLR.cc_20{year}_Conference" for year in range(20, 26)]
     )
-    pids = [f"{year}" for year in range(17, 26)] + ["25"]
+    pids = [f"{year}" for year in range(18, 26)] + ["25"]
     iclr_counter_dict = {}
 
     for fid, pid in zip(file_ids, pids):
@@ -352,7 +352,7 @@ if __name__ == "__main__":
             "packaged": packaged_counter / file_total,
             "tests": counter_dict[("test-folder", True)] / file_total,
             "docs": counter_dict[("docs", True)] / file_total,
-            "python": counter_dict["uses_python", True] / file_total,
+            # "python": counter_dict["uses_python", True] / file_total,
             "LICENSE": counter_dict["LICENSE", True] / file_total,
         }
 
@@ -366,7 +366,7 @@ if __name__ == "__main__":
     xticks = [
         "README",
         "LICENSE",
-        "python",
+        # "python",
         "dependencies",
         "packaged",
         "tests",
