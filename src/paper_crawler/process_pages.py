@@ -294,7 +294,7 @@ if __name__ == "__main__":
         print("Folders")
         print(f"total: {folders_counter.items()} of {page_total}")
         print(f"ratios: {[(mc[0], mc[1] / float(page_total))
-                       for mc in folders_counter.items()]}")
+                          for mc in folders_counter.items()]}")
 
         with open(save_path, "wb") as f_write:
             pickle.dump(

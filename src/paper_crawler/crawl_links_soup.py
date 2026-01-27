@@ -143,6 +143,7 @@ def get_nips_pdf(year: int) -> list[str]:
 
 
 def get_nips_2025_pdf(stop=0):
+    """Get neurips 2025 paper links."""
     url_str = "https://neurips.cc/Downloads/2025"
     soup = BeautifulSoup(urllib.request.urlopen(url_str), "html.parser")
     paper_list = soup.find_all("div", {"class": "list_html"})[0]
