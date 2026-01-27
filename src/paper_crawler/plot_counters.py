@@ -197,7 +197,7 @@ def plot_data(data_dict_by_conf: dict[str, Any], plot_prefix: str) -> None:
             plt.legend()
             # plt.ylim(0, 105)
             plt.grid()
-            plt.ylabel("adoption [\%]")  # noqa: W605
+            plt.ylabel("adoption \%")  # noqa: W605
             plt.xlabel("conference year")
 
             if filename:
@@ -388,7 +388,7 @@ if __name__ == "__main__":
         multiplier += 1
     ax.set_xticks(x + width, xticks)
     ax.set_ylim(0, 100)
-    ax.set_ylabel("Adoption [\%]")  # noqa: W605
+    ax.set_ylabel("Adoption \%")  # noqa: W605
     ax.set_title("Estimated adoption")
     ax.grid()
     ax.legend(loc="upper right", ncol=2)
