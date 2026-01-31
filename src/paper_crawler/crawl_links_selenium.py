@@ -8,14 +8,14 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 
 
-def _get_links_selenium(fun_url: str) -> list[bs4.element.PageElement]:
+def _get_links_selenium(fun_url: str) -> list[bs4.element.Tag]:
     """Extract pdf-links from openreview using selenium to load the javascript.
 
     Args:
         fun_url (str): The URL of the iclr openreview page to crawl.
 
     Returns:
-        list[bs4.element.PageElement]: A list of BeautifulSoup elemets
+        list[bs4.element.Tag]: A list of BeautifulSoup elemets
             that contain pdf-links in their content.
 
     """

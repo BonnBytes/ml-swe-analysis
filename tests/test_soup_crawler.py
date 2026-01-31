@@ -1,6 +1,7 @@
 """Test the pdfs from html crawl code."""
 
 import urllib
+import urllib.parse
 
 from paper_crawler.crawl_links_selenium import get_iclr_pdf_2018, get_iclr_pdf_2019
 from paper_crawler.crawl_links_soup import (

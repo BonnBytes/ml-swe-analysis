@@ -23,8 +23,8 @@ def _get_files_and_folders(
     )[0]
     cells: list[bs4.element.Tag] = list(
         filter(
-            lambda td: "row-name-cell" in str(td),  # type: ignore
-            folders_and_files.find_all("td"),  # type: ignore
+            lambda td: "row-name-cell" in str(td),
+            folders_and_files.find_all("td"),
         )
     )
     folders = []
@@ -248,7 +248,7 @@ if __name__ == "__main__":
                 error_counter += 1
 
         # remove repos that do not use Python.
-        results = python_filter(results)
+        # results = python_filter(results)
 
         # print(f"Problems: {problems}")
         print(f"Problems {error_counter}.")
@@ -294,7 +294,7 @@ if __name__ == "__main__":
         print("Folders")
         print(f"total: {folders_counter.items()} of {page_total}")
         print(f"ratios: {[(mc[0], mc[1] / float(page_total))
-                       for mc in folders_counter.items()]}")
+                         for mc in folders_counter.items()]}")
 
         with open(save_path, "wb") as f_write:
             pickle.dump(
