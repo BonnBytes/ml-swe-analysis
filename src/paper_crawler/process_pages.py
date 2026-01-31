@@ -248,6 +248,7 @@ if __name__ == "__main__":
                 error_counter += 1
 
         # remove repos that do not use Python.
+        # uncomment to produce results for python code only.
         # results = python_filter(results)
 
         # print(f"Problems: {problems}")
