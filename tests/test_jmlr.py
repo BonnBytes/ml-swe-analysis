@@ -1,5 +1,6 @@
 """Test the jmlr link scraping code."""
 
+import urllib
 import urllib.parse
 
 from paper_crawler.crawl_jmlr import _parse_links, mloss_link, tmlr_link
