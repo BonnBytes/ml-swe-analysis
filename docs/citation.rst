@@ -1,0 +1,18 @@
+Citation
+========
+
+If you use this code, please cite:
+
+.. code-block:: bibtex
+
+    @article{
+        wolter2026softwareestimation,
+        title={Estimating the Adoption of Software Engineering Best Practices in Machine Learning Research},
+        author={Wolter, Moritz and Veeramacheneni, Lokesh and Hoyt, Charles Tapley},
+        journal={Transactions on Machine Learning Research},
+        year={2026},
+        url={https://openreview.net/forum?id=13ThuknGwY},
+    }
+
+.. bibliography::
+   :all:

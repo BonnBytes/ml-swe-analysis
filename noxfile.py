@@ -64,7 +64,7 @@ def docs(session):
         "-b",
         "html",
         "-d",
-        "docs/build/doctrees",
+        "docs/_build/doctrees",
         "docs/",
         "docs/_build/html",
     )
