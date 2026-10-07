@@ -11,8 +11,8 @@ import numpy as np
 # tikzplotlib backwards compatability
 # we need to load an old version of matplotlib.
 # https://github.com/nschloe/tikzplotlib/issues/605
-np.Inf = np.inf  # type: ignore
-np.float_ = np.float64  # type: ignore
+np.Inf = np.inf  # type: ignore[attr-defined, unused-ignore]
+np.float_ = np.float64  # type: ignore[attr-defined, unused-ignore]
 
 
 def _post_process_dict(
