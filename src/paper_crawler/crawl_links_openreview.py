@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from ._argparse_code import _parse_args
 from .crawl_links_soup import process_link
+from .openreview_api import openreview_credentials, pdf_link
 
 # from multiprocessing import Pool
 
@@ -29,9 +30,7 @@ def get_openreview_submissions(venueid: str) -> list[str]:
     """
     # print("openreview user:", os.environ["OPENREVIEW_USERNAME"])
     client = openreview.api.OpenReviewClient(
-        baseurl="https://api2.openreview.net",
-        username=os.environ["OPENREVIEW_USERNAME"],
-        password=os.environ["OPENREVIEW_PASSWORD"],
+        baseurl="https://api2.openreview.net", **openreview_credentials()
     )
 
     # check version.
@@ -43,27 +42,17 @@ def get_openreview_submissions(venueid: str) -> list[str]:
         print(f"{venueid} has : {len(submissions)} submissions.")
 
         # assemble links
-        links = [
-            "https://openreview.net" + submission.content["pdf"]["value"]
-            for submission in submissions
-        ]
+        links = [pdf_link(submission.id) for submission in submissions]
         return links
     else:
         # v1 api.
         client = openreview.Client(
-            baseurl="https://api.openreview.net",
-            username=os.environ["OPENREVIEW_USERNAME"],
-            password=os.environ["OPENREVIEW_PASSWORD"],
+            baseurl="https://api.openreview.net", **openreview_credentials()
         )
         submissions = client.get_all_notes(content={"venueid": venueid})
         print(f"{venueid} has : {len(submissions)} submissions.")
         # assemble links
-        links = []
-        for submission in submissions:
-            if "openreview.net" not in submission.content["pdf"]:
-                links.append("https://openreview.net" + submission.content["pdf"])
-            else:
-                links.append(submission.content["pdf"])
+        links = [pdf_link(submission.id) for submission in submissions]
         return links
 
 

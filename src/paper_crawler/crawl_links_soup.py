@@ -7,7 +7,9 @@ and to stores the results in a JSON file.
 
 import json
 import os
-import urllib
+import tempfile
+import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Union
 
@@ -16,7 +18,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 from ._argparse_code import _parse_args
-from .crawl_links_selenium import get_iclr_pdf_2018, get_iclr_pdf_2019
+from .openreview_api import download_pdf, get_iclr_pdf_2018, get_iclr_pdf_2019
 
 imcl_dict = {
     2024: 235,
@@ -206,8 +208,15 @@ def process_link(url: str) -> Union[list[str], None]:
             Is immediately caught and logged on the console.
     """
     try:
-        reader = pdfx.PDFx(url)
-        urls = list(reader.get_references_as_dict()["url"])
+        if "openreview.net" in url:
+            # OpenReview blocks plain downloads, use the API.
+            with tempfile.NamedTemporaryFile(suffix=".pdf") as pdf_file:
+                pdf_file.write(download_pdf(url))
+                pdf_file.flush()
+                urls = list(pdfx.PDFx(pdf_file.name).get_references_as_dict()["url"])
+        else:
+            reader = pdfx.PDFx(url)
+            urls = list(reader.get_references_as_dict()["url"])
         urls_filter_broken = list(filter(lambda url: "http" in url, urls))
         urls_filter_github = list(
             filter(lambda url: "github" in url, urls_filter_broken)

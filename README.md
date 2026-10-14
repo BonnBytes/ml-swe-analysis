@@ -17,6 +17,11 @@ OPENREVIEW_USERNAME=YOUR_OPENREVIEW_ACCOUNT_NAME
 OPENREVIEW_PASSWORD=YOUR_PASSWORD
 ```
 
+If your account uses multi-factor authentication, run
+`python scripts/openreview_token.py` once in a terminal. It asks for your code and stores
+an `OPENREVIEW_TOKEN` in `.env`, which is used instead of the password. The token
+expires after one week.
+
 This crawler utilizes the Selenium package, which in turn requires an installed version of the Chrome browser.
 
 ### Reusability
