@@ -384,7 +384,7 @@ if __name__ == "__main__":
         multiplier += 1
     ax.set_xticks(x + width, xticks)
     ax.set_ylim(0, 100)
-    ax.set_ylabel("Adoption \%")  # noqa: W605
+    ax.set_ylabel("Adoption %")
     ax.set_title("Estimated adoption")
     ax.grid()
     ax.legend(loc="upper right", ncol=2)
