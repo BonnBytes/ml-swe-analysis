@@ -1,14 +1,19 @@
 """This module allows parsing the github pages. It extracts file and folder names."""
 
 import pickle
+import re
 import time
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
 import bs4
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 from tqdm import tqdm
 
 from ._argparse_code import _parse_args
@@ -37,6 +42,75 @@ def _get_files_and_folders(
     return folders, files, cells
 
 
+# GitHub fills the Languages sidebar via JavaScript, look for the language names.
+_LANGUAGE_XPATH = (
+    "//h2[normalize-space()='Languages']/following::span[@itemprop='keywords']"
+)
+
+
+def _render_page(url: str, wait_xpath: str | None = None) -> str:
+    """Load a page in headless Chrome and return the rendered html.
+
+    Args:
+        url (str): The page to load.
+        wait_xpath (str | None): Wait until an element matching this xpath appears.
+            If None, wait a fixed four seconds instead.
+
+    Returns:
+        str: The rendered html.
+    """
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Opens the browser up in background
+    # fix for ubuntu https://github.com/SeleniumHQ/selenium/issues/15327
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument(f"--user-data-dir=./tmp_{time.time()}")
+
+    with Chrome(options=chrome_options) as browser:
+        browser.get(url)
+        if wait_xpath:
+            WebDriverWait(browser, 15).until(
+                expected_conditions.presence_of_element_located((By.XPATH, wait_xpath))
+            )
+        else:
+            time.sleep(4)
+        return browser.page_source
+
+
+def _uses_python(soup: bs4.BeautifulSoup, link: str) -> bool:
+    """Check if GitHub lists Python among the repository's languages.
+
+    Args:
+        soup (bs4.BeautifulSoup): The static html of the repository page.
+        link (str): The link the soup was downloaded from.
+
+    Returns:
+        bool: True if Python appears in the Languages sidebar.
+
+    Raises:
+        TimeoutException: If GitHub announces languages, but they never load.
+    """
+    # The static page says whether a Languages section exists at all.
+    # Skip the browser if it does not, i.e. for repos without detected code.
+    has_languages = re.search(r'"languages":\s*(true|false)', str(soup))
+    if has_languages and has_languages.group(1) == "false":
+        return False
+
+    # The sidebar only exists on the repository's main page.
+    owner_and_repo = "/".join(link.split("github.com/")[-1].split("/")[:2])
+    repo_link = f"https://github.com/{owner_and_repo}"
+    try:
+        html = _render_page(repo_link, wait_xpath=_LANGUAGE_XPATH)
+    except TimeoutException as e:
+        raise TimeoutException(f"Languages of {repo_link} did not load.") from e
+    rendered_soup = bs4.BeautifulSoup(html, "html.parser")
+    languages = [
+        span.text.strip()
+        for span in rendered_soup.find_all("span", attrs={"itemprop": "keywords"})
+    ]
+    return "Python" in languages
+
+
 def extract_stats(
     paper_soup_and_link: tuple[bs4.BeautifulSoup, str],
 ) -> dict[str, dict[str, bool]]:
@@ -48,23 +122,17 @@ def extract_stats(
 
     Returns:
         dict[str, bool]: A dictionary containing the presence of specific files,
-          folders, and whether Python is mentioned on the page.
+          folders, and whether GitHub lists Python among the repo's languages.
             - "files": A dictionary where keys are filenames of interest
                 and values are booleans indicating their presence.
             - "folders": A dictionary where keys are folder names of interest
                 and values are booleans indicating their presence.
             - "python": A dictionary with a key "uses_python"
-                and a boolean value indicating if Python is mentioned on the page.
+                and a boolean value indicating if Python is used.
+                Empty if the repo does not use Python.
     """
     # Second position is the page link, use for debugging.
     soup, link = paper_soup_and_link
-
-    python_span = list(
-        filter(
-            lambda span: "Python" in str(span),
-            soup.find_all("span"),
-        )
-    )
 
     folders, files, cells = _get_files_and_folders(soup)
 
@@ -136,7 +204,7 @@ def extract_stats(
 
     for interesting_folder in interesting_folders:
         result_dict["folders"][interesting_folder] = interesting_folder in folders
-    if python_span:
+    if _uses_python(soup, link):
         result_dict["python"]["uses_python"] = True
 
     def _get_sub_soup(folder: str) -> bs4.BeautifulSoup:
@@ -162,18 +230,7 @@ def extract_stats(
             .split('"')[1]
         )
         folder_link = "https://github.com" + folder_link
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Opens the browser up in background
-        # fix for ubuntu https://github.com/SeleniumHQ/selenium/issues/15327
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        # chrome_options.add_argument(f"--user-data-dir=./tmp_{time.time()}")
-
-        with Chrome(options=chrome_options) as browser:
-            browser.get(folder_link)
-            time.sleep(4)
-            html = browser.page_source
-
+        html = _render_page(folder_link)
         folder_soup = bs4.BeautifulSoup(html, "html.parser")
         return folder_soup
 
@@ -189,9 +246,8 @@ def extract_stats(
                     result_dict["folders"]["src/test"] = True
                 if "tests" in src_folders:
                     result_dict["folders"]["src/tests"] = True
-            except Exception:
-                # print(f"src folder not found, {e}.")
-                pass
+            except Exception as e:
+                print(f"src folder not found, {e}.")
         else:
             try:
                 packet_name = link.split("/")[-1]
@@ -201,9 +257,8 @@ def extract_stats(
                     result_dict["folders"]["package/test"] = True
                 if "tests" in src_folders:
                     result_dict["folders"]["package/tests"] = True
-            except Exception:
-                # print(f"package folder {packet_name}, not found, {e}.")
-                pass
+            except Exception as e:
+                print(f"package folder {packet_name}, not found, {e}.")
     return result_dict
 
 

@@ -3,7 +3,8 @@
 import urllib
 import urllib.parse
 
-from paper_crawler.crawl_links_selenium import get_iclr_pdf_2018, get_iclr_pdf_2019
+import pytest
+
 from paper_crawler.crawl_links_soup import (
     get_iclr_2016_pdf,
     get_icml_2023_pdf,
@@ -12,6 +13,7 @@ from paper_crawler.crawl_links_soup import (
     get_nips_pdf,
     process_link,
 )
+from paper_crawler.openreview_api import get_iclr_pdf_2018, get_iclr_pdf_2019
 
 
 def test_icml24() -> None:
@@ -51,12 +53,14 @@ def test_nips_pdf() -> None:
     assert len(pdf_list) == 94
 
 
+@pytest.mark.uses_credentials
 def test_iclr_pdf_2019() -> None:
     """Check if the soup crawler works for ICLR 2019."""
     pdf_list = get_iclr_pdf_2019()
     assert len(pdf_list) == 502
 
 
+@pytest.mark.uses_credentials
 def test_iclr_pdf_2018() -> None:
     """Check if the crawler works for ICLR 2018."""
     pdf_list = get_iclr_pdf_2018()
