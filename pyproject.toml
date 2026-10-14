@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "paper_crawler"
 version = "0.0.1-dev"
-description = "Supplementary code for our ICML 2024 position paper on the state of the software Engineering ecosystem in ML."
+description = "Supplementary code for our TMLR paper on the adoption of software engineering best practices in ML research."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "EUPL-1.2"

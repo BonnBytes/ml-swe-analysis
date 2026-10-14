@@ -1,14 +1,4 @@
-"""Log in to OpenReview once and store an API token in .env.
-
-OpenReview accounts with multi-factor authentication need an interactive login.
-Run this script in a terminal, enter the TOTP code, and the crawler code and
-tests then use the stored token without asking again. The token expires after
-one week, run this script again to refresh it.
-
-Usage:
-    uv run --no-project --with openreview-py --with python-dotenv \
-        python scripts/openreview_token.py
-"""
+"""Log in to OpenReview once and store an API token in .env."""
 
 import os
 

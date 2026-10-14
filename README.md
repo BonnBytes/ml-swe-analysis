@@ -1,6 +1,6 @@
-## More Rigorous Software Engineering Would Improve Reproducibility in Machine Learning Research
+## Estimating the Adoption of Software Engineering Best Practices in Machine Learning Research
 
-Source code for our [position paper on software engineering in machine learning](https://arxiv.org/pdf/2502.00902).
+Source code for our [TMLR paper on the adoption of software engineering best practices in machine learning research](https://openreview.net/forum?id=13ThuknGwY).
 An example template repository for most concepts discussed in the paper is available [here](https://github.com/Deep-Learning-with-Jax/day_01_exercise_intro/tree/main). 
 
 ### Getting Started
@@ -54,6 +54,20 @@ nox -s docs
 into the console.
 The session installs Sphinx and the theme into its own environment and writes the HTML
 pages to `docs/_build/html`. Open `docs/_build/html/index.html` in a browser to view them.
+
+### Citation
+If you use this code, please cite:
+
+``` bibtex
+@article{
+    wolter2026softwareestimation,
+    title={Estimating the Adoption of Software Engineering Best Practices in Machine Learning Research},
+    author={Wolter, Moritz and Veeramacheneni, Lokesh and Hoyt, Charles Tapley},
+    journal={Transactions on Machine Learning Research},
+    year={2026},
+    url={https://openreview.net/forum?id=13ThuknGwY},
+}
+```
 
 
 

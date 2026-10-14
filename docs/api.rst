@@ -7,7 +7,7 @@ API Reference
 
 .. automodule:: paper_crawler.crawl_links_openreview
 
-.. automodule:: paper_crawler.crawl_links_selenium
+.. automodule:: paper_crawler.openreview_api
 
 .. automodule:: paper_crawler.crawl_links_soup
 
