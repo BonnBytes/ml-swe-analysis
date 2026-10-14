@@ -46,6 +46,15 @@ nox -s test
 ```
 into the console.
 
+### Build the documentation
+The documentation is built with Sphinx. To generate it, type
+``` bash
+nox -s docs
+```
+into the console.
+The session installs Sphinx and the theme into its own environment and writes the HTML
+pages to `docs/_build/html`. Open `docs/_build/html/index.html` in a browser to view them.
+
 
 
 
